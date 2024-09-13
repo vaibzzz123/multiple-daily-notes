@@ -8,6 +8,7 @@ export interface DailyNoteConfiguration {
   template: string;
   dateFormat: string;
   timeOffset?: string; // HH:mm format
+  icon?: string,
 }
 
 /**

@@ -2,6 +2,17 @@ import MultipleDailyNotes from "./main";
 import { App, PluginSettingTab, Setting } from "obsidian";
 import { DailyNoteConfiguration } from "./settings";
 
+const ICON_OPTIONS: { [key: string]: string } = {
+  'calendar': 'Calendar',
+  'pencil': 'Pencil',
+  'checkmark': 'Checkmark',
+  'folder': 'Folder',
+  'document': 'Document',
+  'clock': 'Clock',
+  'link': 'Link',
+  'star': 'Star'
+};
+
 export default class DailyNotesSettingTab extends PluginSettingTab {
 	plugin: MultipleDailyNotes;
 
@@ -14,7 +25,7 @@ export default class DailyNotesSettingTab extends PluginSettingTab {
 		const { containerEl } = this;
 
 		containerEl.empty();
-    containerEl.classList.add('multiple-daily-notes-settings');
+		containerEl.classList.add("multiple-daily-notes-settings");
 		containerEl.createEl("h2", { text: "Daily Notes Configurations" });
 
 		// List current configurations
@@ -98,6 +109,22 @@ export default class DailyNotesSettingTab extends PluginSettingTab {
 				})
 		);
 
+		// Icon dropdown setting
+		setting.addDropdown((dropdown) => {
+			dropdown.setValue(config.icon || "calendar"); // Default icon to 'calendar'
+
+			// Fill the dropdown with icon options
+			Object.keys(ICON_OPTIONS).forEach((icon) => {
+				dropdown.addOption(icon, ICON_OPTIONS[icon]);
+			});
+
+			// Handle selection changes
+			dropdown.onChange(async (value) => {
+				config.icon = value;
+				await this.plugin.saveSettings();
+			});
+		});
+  
 		// "Delete configuration" button
 		setting.addButton((button) => {
 			button

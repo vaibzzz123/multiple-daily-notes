@@ -39,9 +39,9 @@ export default class MultipleDailyNotes extends Plugin {
 
   // Function to add a ribbon button for each daily note configuration
   addDailyNoteRibbon(config: DailyNoteConfiguration, index: number) {
-    // Add a ribbon icon (using Obsidian's internal icon set)
+    const iconName = config.icon || 'calendar';
     const ribbonIcon = this.addRibbonIcon(
-      'calendar', // Icon from Obsidian's built-in icons (change as needed)
+      iconName, // Use the custom icon name
       `Create Daily Note (${config.folder})`, // Tooltip that shows when hovered
       () => {
         // Callback to create the daily note for this config

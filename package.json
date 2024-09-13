@@ -1,7 +1,7 @@
 {
-	"name": "obsidian-sample-plugin",
+	"name": "mutliple-daily-notes",
 	"version": "1.0.0",
-	"description": "This is a sample plugin for Obsidian (https://obsidian.md)",
+	"description": "Plugin for Obsidian that lets you create multiple daily notes in one vault",
 	"main": "main.js",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",

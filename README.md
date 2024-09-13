@@ -1,6 +1,8 @@
-# Obsidian Sample Plugin
+# Multiple Daily Notes
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+Add some documentation here
+
+<!-- This is a sample plugin for Obsidian (https://obsidian.md).
 
 This project uses TypeScript to provide type checking and documentation.
 The repo depends on the latest plugin API (obsidian.d.ts) in TypeScript Definition format, which contains TSDoc comments describing what it does.
@@ -93,4 +95,4 @@ If you have multiple URLs, you can also do:
 
 ## API Documentation
 
-See https://github.com/obsidianmd/obsidian-api
+See https://github.com/obsidianmd/obsidian-api -->

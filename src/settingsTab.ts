@@ -14,7 +14,7 @@ export default class DailyNotesSettingTab extends PluginSettingTab {
 		const { containerEl } = this;
 
 		containerEl.empty();
-
+    containerEl.classList.add('multiple-daily-notes-settings');
 		containerEl.createEl("h2", { text: "Daily Notes Configurations" });
 
 		// List current configurations

@@ -1,27 +1,25 @@
-/* Ensure each setting section is separated for better readability */
-.setting-item {
+/* Target only elements inside your plugin's settings panel */
+.multiple-daily-notes-settings .setting-item {
   display: flex;
-  flex-direction: column;  /* Stack items vertically */
-  margin-bottom: 1.5em;    /* Add space between settings */
+  flex-direction: column;
+  margin-bottom: 1.5em; /* Add space between each setting */
 }
 
-/* Style the label and input fields to make them more readable */
-.setting-item .setting-item-name {
+.multiple-daily-notes-settings .setting-item .setting-item-name {
   font-weight: bold;
-  margin-bottom: 0.5em;  /* Add space below the setting name */
+  margin-bottom: 0.5em;
 }
 
-.setting-item .setting-item-control input,
-.setting-item .setting-item-control select {
-  width: 100%;           /* Make the input fields take full width */
-  padding: 0.5em;         /* Add padding for better readability */
-  border-radius: 5px;     /* Rounded corners for inputs */
-  border: 1px solid var(--background-modifier-border); /* Border around input fields */
+.multiple-daily-notes-settings .setting-item .setting-item-control input,
+.multiple-daily-notes-settings .setting-item .setting-item-control select {
+  width: 100%;
+  padding: 0.5em;
+  border-radius: 5px;
+  border: 1px solid var(--background-modifier-border);
 }
 
-/* Adjust the button style to make it visually consistent */
-.setting-item .setting-item-control button {
+.multiple-daily-notes-settings .setting-item .setting-item-control button {
   padding: 0.5em 1em;
   border-radius: 5px;
-  margin-top: 0.5em;  /* Add space above the button */
+  margin-top: 0.5em;
 }

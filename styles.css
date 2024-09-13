@@ -1,8 +1,27 @@
-/*
+/* Ensure each setting section is separated for better readability */
+.setting-item {
+  display: flex;
+  flex-direction: column;  /* Stack items vertically */
+  margin-bottom: 1.5em;    /* Add space between settings */
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+/* Style the label and input fields to make them more readable */
+.setting-item .setting-item-name {
+  font-weight: bold;
+  margin-bottom: 0.5em;  /* Add space below the setting name */
+}
 
-If your plugin does not need CSS, delete this file.
+.setting-item .setting-item-control input,
+.setting-item .setting-item-control select {
+  width: 100%;           /* Make the input fields take full width */
+  padding: 0.5em;         /* Add padding for better readability */
+  border-radius: 5px;     /* Rounded corners for inputs */
+  border: 1px solid var(--background-modifier-border); /* Border around input fields */
+}
 
-*/
+/* Adjust the button style to make it visually consistent */
+.setting-item .setting-item-control button {
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  margin-top: 0.5em;  /* Add space above the button */
+}

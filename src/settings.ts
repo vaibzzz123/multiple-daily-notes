@@ -7,6 +7,7 @@ export interface DailyNoteConfiguration {
   folder: string;
   template: string;
   dateFormat: string;
+  timeOffset?: string; // HH:mm format
 }
 
 /**

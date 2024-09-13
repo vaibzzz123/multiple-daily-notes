@@ -13,6 +13,10 @@ export default class MultipleDailyNotes extends Plugin {
     
     this.addSettingTab(new DailyNotesSettingTab(this.app, this));
 
+    this.settings.dailyNotesConfigs.forEach((config, index) => {
+      this.addDailyNoteRibbon(config, index);
+    });
+
     // Example: Add a simple command
     this.addCommand({
       id: 'create-daily-notes',
@@ -31,6 +35,22 @@ export default class MultipleDailyNotes extends Plugin {
   // Called when the plugin is unloaded (e.g., when disabled or removed)
   onunload() {
     console.log('Unloading MultipleDailyNotes');
+  }
+
+  // Function to add a ribbon button for each daily note configuration
+  addDailyNoteRibbon(config: DailyNoteConfiguration, index: number) {
+    // Add a ribbon icon (using Obsidian's internal icon set)
+    const ribbonIcon = this.addRibbonIcon(
+      'calendar', // Icon from Obsidian's built-in icons (change as needed)
+      `Create Daily Note (${config.folder})`, // Tooltip that shows when hovered
+      () => {
+        // Callback to create the daily note for this config
+        this.createDailyNoteForConfig(config);
+      }
+    );
+
+    // Optionally style the ribbon button or do other customizations
+    ribbonIcon.addClass(`my-plugin-ribbon-${index}`);
   }
 
   async saveSettings() {

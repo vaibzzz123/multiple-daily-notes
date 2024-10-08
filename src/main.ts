@@ -1,19 +1,37 @@
 import { Plugin, Notice } from 'obsidian'; // Import the Plugin class from Obsidian API
+import { DailyNotesConfig } from './types';
 
 export default class MultipleDailyNotes extends Plugin {
   // Called when the plugin is loaded
   async onload() {
     console.log('Loading MyPlugin');
-    // this.addSettingTab(new DailyNotesSettingTab(this.app, this));
     // Example: Add a simple command
+    const configs: DailyNotesConfig[] = [
+    {
+      templateFileLocation: 'fold1/Template1',
+      fileLocation: 'fold1/',
+      timeOffset: 0
+    },
+    {
+      templateFileLocation: 'fold2/Template2',
+      fileLocation: 'fold2/',
+      timeOffset: 0
+    }
+    ];
     this.addCommand({
-      id: 'example-command',
-      name: 'Example Command',
+      id: 'create-daily-notes',
+      name: 'Create Daily Notes from config',
       callback: () => {
-        new Notice('Hello from MyPlugin!');  // Show a message when the command is invoked
+        for(const config of configs) {
+          new Notice(`Hello from MyPlugin! Current config is ${JSON.stringify(config)}`);
+        }    
       }
     });
+
+
   }
+
+
   // Called when the plugin is unloaded (e.g., when disabled or removed)
   onunload() {
     console.log('Unloading MyPlugin');

@@ -5,7 +5,7 @@ export default class MultipleDailyNotes extends Plugin {
 	// Called when the plugin is loaded
 	async onload() {
 		console.log("Loading MyPlugin");
-		// Example: Add a simple command
+		// Example config, hard coded for now, will be configurable in settings UI later
 		const configs: DailyNotesConfig[] = [
 			{
 				templateFileLocation: "fold1/Template1.md",
@@ -20,6 +20,17 @@ export default class MultipleDailyNotes extends Plugin {
 				timeOffset: "00:00",
 			},
 		];
+
+    for(const config of configs) {
+      this.addRibbonIcon(
+        config.ribbonIcon || "calendar",
+        `Create Daily Note: ${config.templateFileLocation}`,
+        async () => {
+          await this.openDailyNote(config);
+        }
+      );
+    }
+
 		this.addCommand({
 			id: "create-daily-notes",
 			name: "Create Daily Notes from config",
@@ -31,14 +42,28 @@ export default class MultipleDailyNotes extends Plugin {
 		});
 	}
 
-  getNoteFilePathForConfig(config: DailyNotesConfig) {
-    const date = moment();
-    const hoursOffset = parseInt(config.timeOffset.split(":")[0]);
-    const minutesOffset = parseInt(config.timeOffset.split(":")[1]);
-    date.subtract(hoursOffset, "hours").subtract(minutesOffset, "minutes");
-    const newFileName = date.format(config.dateFormat) + ".md";
-    return config.newFileFolder + newFileName;
-  }
+	async openDailyNote(config: DailyNotesConfig) {
+		const dailyNoteFilePath = this.getNoteFilePathForConfig(config);
+		let dailyNoteFile = this.app.vault.getAbstractFileByPath(
+			dailyNoteFilePath
+		) as TFile;
+		if (!dailyNoteFile) {
+			await this.createDailyNote(config);
+      dailyNoteFile = this.app.vault.getAbstractFileByPath(
+        dailyNoteFilePath
+      ) as TFile;
+		}
+		this.app.workspace.getLeaf().openFile(dailyNoteFile);
+	}
+
+	getNoteFilePathForConfig(config: DailyNotesConfig) {
+		const date = moment();
+		const hoursOffset = parseInt(config.timeOffset.split(":")[0]);
+		const minutesOffset = parseInt(config.timeOffset.split(":")[1]);
+		date.subtract(hoursOffset, "hours").subtract(minutesOffset, "minutes");
+		const newFileName = date.format(config.dateFormat) + ".md";
+		return config.newFileFolder + newFileName;
+	}
 
 	async createDailyNote(config: DailyNotesConfig) {
 		const templateFile = this.app.vault.getAbstractFileByPath(
@@ -49,7 +74,7 @@ export default class MultipleDailyNotes extends Plugin {
 				const templateFileContents = await this.app.vault.read(
 					templateFile
 				);
-        const newFilePath = this.getNoteFilePathForConfig(config);
+				const newFilePath = this.getNoteFilePathForConfig(config);
 				const newFileContents = templateFileContents;
 				const newFile =
 					this.app.vault.getAbstractFileByPath(newFilePath);

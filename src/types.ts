@@ -4,4 +4,5 @@ export type DailyNotesConfig = {
   dateFormat: string;
   timeOffset: string; // HH:mm format
   ribbonIcon?: string;
+  commandDescription?: string;
 }

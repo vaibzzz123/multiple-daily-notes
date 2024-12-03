@@ -12,6 +12,7 @@ export default class MultipleDailyNotes extends Plugin {
 				newFileFolder: "fold1/",
 				dateFormat: "YYYY-MM-DD",
 				timeOffset: "00:00",
+				commandDescription: "Open main journal daily note"
 			},
 			{
 				templateFileLocation: "fold2/Template2.md",
@@ -24,7 +25,7 @@ export default class MultipleDailyNotes extends Plugin {
     for(const config of configs) {
       this.addRibbonIcon(
         config.ribbonIcon || "calendar",
-        `Create Daily Note: ${config.templateFileLocation}`,
+        config.commandDescription || `Open Daily Note: ${config.templateFileLocation}`,
         async () => {
           await this.openDailyNote(config);
         }

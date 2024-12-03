@@ -6,3 +6,12 @@ export type DailyNotesConfig = {
   ribbonIcon?: string;
   commandDescription?: string;
 }
+
+export const defaultDailyNotesConfig: DailyNotesConfig[] = [
+  {
+    templateFileLocation: "",
+    newFileFolder: "",
+    dateFormat: "",
+    timeOffset: "",
+  }
+]

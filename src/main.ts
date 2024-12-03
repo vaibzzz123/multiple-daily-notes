@@ -1,7 +1,9 @@
 import { Plugin, Notice, TFile, moment } from "obsidian"; // Import the Plugin class from Obsidian API
-import { DailyNotesConfig } from "./types";
+import { DailyNotesConfig, defaultDailyNotesConfig } from "./types";
+import SettingsTab from "./settings";
 
 export default class MultipleDailyNotes extends Plugin {
+	settings: [];
 	// Called when the plugin is loaded
 	async onload() {
 		console.log("Loading MyPlugin");
@@ -22,6 +24,10 @@ export default class MultipleDailyNotes extends Plugin {
 			},
 		];
 
+		await this.loadSettings();
+
+		this.addSettingTab(new SettingsTab(this.app, this));
+
     for(const config of configs) {
       this.addRibbonIcon(
         config.ribbonIcon || "calendar",
@@ -41,6 +47,9 @@ export default class MultipleDailyNotes extends Plugin {
 				}
 			},
 		});
+	}
+	async loadSettings() {
+		this.settings = Object.assign({}, defaultDailyNotesConfig, await this.loadData());
 	}
 
 	async openDailyNote(config: DailyNotesConfig) {
@@ -70,7 +79,7 @@ export default class MultipleDailyNotes extends Plugin {
 		const templateFile = this.app.vault.getAbstractFileByPath(
 			config.templateFileLocation
 		) as TFile;
-		if (templateFile instanceof TFile) {
+		if (templateFile instanceof TFile) { // Will only run if the template file exists
 			try {
 				const templateFileContents = await this.app.vault.read(
 					templateFile

@@ -52,36 +52,47 @@ export default class SettingsTab extends PluginSettingTab {
 					suggestionContainer.style.right =
 						containerEl.getCssPropertyValue("padding-right");
 
-            inputEl.addEventListener("focus", async () => {
-              console.log('fire!') //
-              suggestionContainer.style.display = "block";
-              if(suggestionContainer.innerHTML === "") {
-                const files = this.app.vault.getFiles();
-                const matchingFiles = files.filter((file) =>
-                  file.path
-                    .toLowerCase()
-                    .includes(inputEl.value.toLowerCase())
-                );
-                for (const file of matchingFiles) {
-                  const suggestionItem = createDiv({
-                    cls: "suggestion-item",
-                  });
-                  suggestionItem.textContent = file.path;
-                  suggestionItem.addEventListener("click", async () => {
-                    text.setValue(file.path);
-                    suggestionContainer.innerHTML = "";
-                    await this.plugin.saveSettings();
-                  });
-                  suggestionContainer.appendChild(suggestionItem);
-                }
-  
-                }
-            });
+					inputEl.addEventListener("focus", async () => {
+						suggestionContainer.style.display = "block";
+						if (suggestionContainer.innerHTML === "") {
+							const files = this.app.vault.getFiles();
+							const matchingFiles = files.filter((file) =>
+								file.path
+									.toLowerCase()
+									.includes(inputEl.value.toLowerCase())
+							);
+							for (const file of matchingFiles) {
+								const suggestionItem = createDiv({
+									cls: "suggestion-item",
+								});
+								suggestionItem.textContent = file.path;
+								suggestionItem.addEventListener(
+									"click",
+									async () => {
+										console.log(
+											"inside onfocus - suggestion selected"
+										);
+										text.setValue(file.path);
+										suggestionContainer.innerHTML = "";
 
-            // inputEl.addEventListener("blur", () => {
-            //     suggestionContainer.style.display = "none";
-            // });
+										this.plugin.settings.settings[
+											i
+										].templateFileLocation =
+											text.getValue();
 
+										await this.plugin.saveSettings();
+									}
+								);
+								suggestionContainer.appendChild(suggestionItem);
+							}
+						}
+					});
+
+					inputEl.addEventListener("blur", () => {
+						setTimeout(() => {
+							suggestionContainer.style.display = "none";
+						}, 200); // Delay to allow clicking on suggestions
+					});
 
 					return text
 						.setPlaceholder("Location of template file")
@@ -102,12 +113,23 @@ export default class SettingsTab extends PluginSettingTab {
 									cls: "suggestion-item",
 								});
 								suggestionItem.textContent = file.path;
-								suggestionItem.addEventListener("click", async () => {
-                  console.log('suggestion selected')
-									text.setValue(file.path);
-									suggestionContainer.innerHTML = "";
-                  await this.plugin.saveSettings();
-								});
+								suggestionItem.addEventListener(
+									"click",
+									async () => {
+										console.log(
+											"inside main onchange - suggestion selected"
+										);
+										text.setValue(file.path);
+										suggestionContainer.innerHTML = "";
+
+										this.plugin.settings.settings[
+											i
+										].templateFileLocation =
+											text.getValue();
+
+										await this.plugin.saveSettings();
+									}
+								);
 								suggestionContainer.appendChild(suggestionItem);
 							}
 

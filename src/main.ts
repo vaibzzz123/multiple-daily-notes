@@ -7,7 +7,6 @@ export default class MultipleDailyNotes extends Plugin {
 
 	async loadSettings() {
 		this.settings = Object.assign({}, defaultSettings, await this.loadData());
-		console.log(this.settings);
 	}
 
 	async saveSettings() {

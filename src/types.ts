@@ -1,4 +1,4 @@
-export type DailyNotesConfig = {
+export interface DailyNotesConfig {
   templateFileLocation: string;
   newFileFolder: string;
   dateFormat: string;
@@ -7,7 +7,12 @@ export type DailyNotesConfig = {
   commandDescription?: string;
 }
 
-export const defaultDailyNotesConfig: DailyNotesConfig[] = [
+export interface PluginSettings {
+  settings: DailyNotesConfig[];
+}
+
+export const defaultSettings: PluginSettings = {
+  settings: [
   {
     templateFileLocation: "",
     newFileFolder: "",
@@ -15,3 +20,4 @@ export const defaultDailyNotesConfig: DailyNotesConfig[] = [
     timeOffset: "",
   }
 ]
+};

@@ -1,34 +1,44 @@
 import { Plugin, Notice, TFile, moment } from "obsidian"; // Import the Plugin class from Obsidian API
-import { DailyNotesConfig, defaultDailyNotesConfig } from "./types";
+import { DailyNotesConfig, defaultSettings, PluginSettings } from "./types";
 import SettingsTab from "./settings";
 
 export default class MultipleDailyNotes extends Plugin {
-	settings: [];
+	settings: PluginSettings;
+
+	async loadSettings() {
+		this.settings = Object.assign({}, defaultSettings, await this.loadData());
+		console.log(this.settings);
+	}
+
+	async saveSettings() {
+		await this.saveData(this.settings);
+	}
+
 	// Called when the plugin is loaded
 	async onload() {
 		console.log("Loading MyPlugin");
 		// Example config, hard coded for now, will be configurable in settings UI later
-		const configs: DailyNotesConfig[] = [
-			{
-				templateFileLocation: "fold1/Template1.md",
-				newFileFolder: "fold1/",
-				dateFormat: "YYYY-MM-DD",
-				timeOffset: "00:00",
-				commandDescription: "Open main journal daily note"
-			},
-			{
-				templateFileLocation: "fold2/Template2.md",
-				newFileFolder: "fold2/",
-				dateFormat: "YYYY-MM-DD",
-				timeOffset: "00:00",
-			},
-		];
+		// const configs: DailyNotesConfig[] = [
+		// 	{
+		// 		templateFileLocation: "fold1/Template1.md",
+		// 		newFileFolder: "fold1/",
+		// 		dateFormat: "YYYY-MM-DD",
+		// 		timeOffset: "00:00",
+		// 		commandDescription: "Open main journal daily note"
+		// 	},
+		// 	{
+		// 		templateFileLocation: "fold2/Template2.md",
+		// 		newFileFolder: "fold2/",
+		// 		dateFormat: "YYYY-MM-DD",
+		// 		timeOffset: "00:00",
+		// 	},
+		// ];
 
 		await this.loadSettings();
 
 		this.addSettingTab(new SettingsTab(this.app, this));
 
-    for(const config of configs) {
+    for(const config of this.settings.settings) {
       this.addRibbonIcon(
         config.ribbonIcon || "calendar",
         config.commandDescription || `Open Daily Note: ${config.templateFileLocation}`,
@@ -42,14 +52,11 @@ export default class MultipleDailyNotes extends Plugin {
 			id: "create-daily-notes",
 			name: "Create Daily Notes from config",
 			callback: () => {
-				for (const config of configs) {
+				for (const config of this.settings.settings) {
 					this.createDailyNote(config);
 				}
 			},
 		});
-	}
-	async loadSettings() {
-		this.settings = Object.assign({}, defaultDailyNotesConfig, await this.loadData());
 	}
 
 	async openDailyNote(config: DailyNotesConfig) {

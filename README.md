@@ -1,6 +1,8 @@
 # Multiple Daily Notes
 
-Add some documentation here
+Obsidian plugin for adding multiple daily notes, with some extra configurations too.
+
+![image](https://github.com/user-attachments/assets/6d7197e4-43bb-4350-a43f-9276999b6bc8)
 
 <!-- This is a sample plugin for Obsidian (https://obsidian.md).
 

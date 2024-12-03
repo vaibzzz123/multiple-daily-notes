@@ -1,8 +1,25 @@
-/*
+/* Target only elements inside your plugin's settings panel */
+.multiple-daily-notes-settings .setting-item {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.5em; /* Add space between each setting */
+}
 
-This CSS file will be included with your plugin, and
-available in the app when your plugin is enabled.
+.multiple-daily-notes-settings .setting-item .setting-item-name {
+  font-weight: bold;
+  margin-bottom: 0.5em;
+}
 
-If your plugin does not need CSS, delete this file.
+.multiple-daily-notes-settings .setting-item .setting-item-control input,
+.multiple-daily-notes-settings .setting-item .setting-item-control select {
+  width: 100%;
+  padding: 0.5em;
+  border-radius: 5px;
+  border: 1px solid var(--background-modifier-border);
+}
 
-*/
+.multiple-daily-notes-settings .setting-item .setting-item-control button {
+  padding: 0.5em 1em;
+  border-radius: 5px;
+  margin-top: 0.5em;
+}

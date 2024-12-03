@@ -347,4 +347,3 @@ export default class SettingsTab extends PluginSettingTab {
 				});
 			});
 	}
-}

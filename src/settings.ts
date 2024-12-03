@@ -1,4 +1,4 @@
-import { App, PluginSettingTab, Setting } from "obsidian";
+import { App, PluginSettingTab, Setting, TFolder } from "obsidian";
 import MultipleDailyNotes from "./main";
 
 export default class SettingsTab extends PluginSettingTab {
@@ -24,10 +24,11 @@ export default class SettingsTab extends PluginSettingTab {
 				.setName("Template File Location")
 				.setDesc("Path to the template file")
 				.addText((text) => {
+
 					const inputEl = text.inputEl;
 					const styleEl = document.createElement("style");
 					styleEl.innerText = `
-            .suggestion-container {
+            .template-suggestion-container {
               position: absolute;
               background: var(--background-primary);
               border: 1px solid var(--background-modifier-border);
@@ -35,18 +36,18 @@ export default class SettingsTab extends PluginSettingTab {
               overflow-y: auto;
               z-index: 100;
             }
-            .suggestion-item {
+            .template-suggestion-item {
               padding: 8px;
               cursor: pointer;
             }
-            .suggestion-item:hover {
+            .template-suggestion-item:hover {
               background: var(--background-modifier-hover);
             }
           `;
 					containerEl.appendChild(styleEl);
 
 					const suggestionContainer = createDiv({
-						cls: "suggestion-container",
+						cls: "template-suggestion-container",
 					});
 					containerEl.appendChild(suggestionContainer);
 					suggestionContainer.style.right =
@@ -63,15 +64,12 @@ export default class SettingsTab extends PluginSettingTab {
 							);
 							for (const file of matchingFiles) {
 								const suggestionItem = createDiv({
-									cls: "suggestion-item",
+									cls: "template-suggestion-item",
 								});
 								suggestionItem.textContent = file.path;
 								suggestionItem.addEventListener(
 									"click",
 									async () => {
-										console.log(
-											"inside onfocus - suggestion selected"
-										);
 										text.setValue(file.path);
 										suggestionContainer.innerHTML = "";
 
@@ -116,9 +114,6 @@ export default class SettingsTab extends PluginSettingTab {
 								suggestionItem.addEventListener(
 									"click",
 									async () => {
-										console.log(
-											"inside main onchange - suggestion selected"
-										);
 										text.setValue(file.path);
 										suggestionContainer.innerHTML = "";
 
@@ -140,20 +135,126 @@ export default class SettingsTab extends PluginSettingTab {
 						});
 				});
 
+
+
 			// New File Folder
 			new Setting(containerEl)
 				.setName("New File Folder")
 				.setDesc("Folder where new files will be created")
-				.addText((text) =>
-					text
+				.addText((text) => {
+
+					const inputEl = text.inputEl;
+					const styleEl = document.createElement("style");
+					styleEl.innerText = `
+            .folder-suggestion-container {
+              position: absolute;
+              background: var(--background-primary);
+              border: 1px solid var(--background-modifier-border);
+              max-height: 200px;
+              overflow-y: auto;
+              z-index: 100;
+            }
+            .folder-suggestion-item {
+              padding: 8px;
+              cursor: pointer;
+            }
+            .folder-suggestion-item:hover {
+              background: var(--background-modifier-hover);
+            }
+          `;
+					containerEl.appendChild(styleEl);
+
+					const suggestionContainer = createDiv({
+						cls: "folder-suggestion-container",
+					});
+					containerEl.appendChild(suggestionContainer);
+					suggestionContainer.style.right =
+						containerEl.getCssPropertyValue("padding-right");
+
+            inputEl.addEventListener("focus", async () => {
+              suggestionContainer.style.display = "block";
+              if (suggestionContainer.innerHTML === "") {
+                const files = this.app.vault.getAllLoadedFiles();
+                const folders = files.filter((item) => item instanceof TFolder); // Only folders have 'children'
+                const matchingFolders = folders.filter((file) =>
+                  file.path
+                    .toLowerCase()
+                    .includes(inputEl.value.toLowerCase())
+                );
+                for (const folder of matchingFolders) {
+                  const suggestionItem = createDiv({
+                    cls: "folder-suggestion-item",
+                  });
+                  suggestionItem.textContent = folder.path;
+                  suggestionItem.addEventListener(
+                    "click",
+                    async () => {
+                      text.setValue(folder.path);
+                      suggestionContainer.innerHTML = "";
+  
+                      this.plugin.settings.settings[
+                        i
+                      ].newFileFolder =
+                        text.getValue();
+  
+                      await this.plugin.saveSettings();
+                    }
+                  );
+                  suggestionContainer.appendChild(suggestionItem);
+                }
+              }
+            });
+  
+
+            inputEl.addEventListener("blur", () => {
+              setTimeout(() => {
+                suggestionContainer.style.display = "none";
+              }, 200); // Delay to allow clicking on suggestions
+            });
+  
+
+					return text
 						.setPlaceholder("Location of folder for new file")
 						.setValue(setting.newFileFolder)
 						.onChange(async (value) => {
-							this.plugin.settings.settings[i].newFileFolder =
-								value;
+							const files = this.app.vault.getAllLoadedFiles();
+              const folders = files.filter((item) => item instanceof TFolder); // Only folders have 'children'
+							const matchingFolders = folders.filter((file) =>
+								file.path
+									.toLowerCase()
+									.includes(value.toLowerCase())
+							);
+
+							// Clear previous suggestions
+							suggestionContainer.innerHTML = "";
+
+							for (const folder of matchingFolders) {
+								const suggestionItem = createDiv({
+									cls: "suggestion-item",
+								});
+								suggestionItem.textContent = folder.path;
+								suggestionItem.addEventListener(
+									"click",
+									async () => {
+										text.setValue(folder.path);
+										suggestionContainer.innerHTML = "";
+
+										this.plugin.settings.settings[
+											i
+										].newFileFolder =
+											text.getValue();
+
+										await this.plugin.saveSettings();
+									}
+								);
+								suggestionContainer.appendChild(suggestionItem);
+							}
+
+							this.plugin.settings.settings[
+								i
+							].newFileFolder = value;
 							await this.plugin.saveSettings();
-						})
-				);
+						});    });
 
 			// Date Format
 			new Setting(containerEl)

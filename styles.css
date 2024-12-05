@@ -1,25 +1,32 @@
 /* Target only elements inside your plugin's settings panel */
-.multiple-daily-notes-settings .setting-item {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1.5em; /* Add space between each setting */
-}
-
-.multiple-daily-notes-settings .setting-item .setting-item-name {
-  font-weight: bold;
-  margin-bottom: 0.5em;
-}
-
-.multiple-daily-notes-settings .setting-item .setting-item-control input,
-.multiple-daily-notes-settings .setting-item .setting-item-control select {
-  width: 100%;
-  padding: 0.5em;
-  border-radius: 5px;
+.template-suggestion-container {
+  position: absolute;
+  background: var(--background-primary);
   border: 1px solid var(--background-modifier-border);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 100;
+}
+.template-suggestion-item {
+  padding: 8px;
+  cursor: pointer;
+}
+.template-suggestion-item:hover {
+  background: var(--background-modifier-hover);
 }
 
-.multiple-daily-notes-settings .setting-item .setting-item-control button {
-  padding: 0.5em 1em;
-  border-radius: 5px;
-  margin-top: 0.5em;
+.folder-suggestion-container {
+  position: absolute;
+  background: var(--background-primary);
+  border: 1px solid var(--background-modifier-border);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 100;
+}
+.folder-suggestion-item {
+  padding: 8px;
+  cursor: pointer;
+}
+.folder-suggestion-item:hover {
+  background: var(--background-modifier-hover);
 }

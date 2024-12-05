@@ -26,25 +26,6 @@ export default class SettingsTab extends PluginSettingTab {
 				.addText((text) => {
 
 					const inputEl = text.inputEl;
-					const styleEl = document.createElement("style");
-					styleEl.innerText = `
-            .template-suggestion-container {
-              position: absolute;
-              background: var(--background-primary);
-              border: 1px solid var(--background-modifier-border);
-              max-height: 200px;
-              overflow-y: auto;
-              z-index: 100;
-            }
-            .template-suggestion-item {
-              padding: 8px;
-              cursor: pointer;
-            }
-            .template-suggestion-item:hover {
-              background: var(--background-modifier-hover);
-            }
-          `;
-					containerEl.appendChild(styleEl);
 
 					const suggestionContainer = createDiv({
 						cls: "template-suggestion-container",
@@ -144,25 +125,6 @@ export default class SettingsTab extends PluginSettingTab {
 				.addText((text) => {
 
 					const inputEl = text.inputEl;
-					const styleEl = document.createElement("style");
-					styleEl.innerText = `
-            .folder-suggestion-container {
-              position: absolute;
-              background: var(--background-primary);
-              border: 1px solid var(--background-modifier-border);
-              max-height: 200px;
-              overflow-y: auto;
-              z-index: 100;
-            }
-            .folder-suggestion-item {
-              padding: 8px;
-              cursor: pointer;
-            }
-            .folder-suggestion-item:hover {
-              background: var(--background-modifier-hover);
-            }
-          `;
-					containerEl.appendChild(styleEl);
 
 					const suggestionContainer = createDiv({
 						cls: "folder-suggestion-container",
@@ -347,3 +309,4 @@ export default class SettingsTab extends PluginSettingTab {
 				});
 			});
 	}
+}

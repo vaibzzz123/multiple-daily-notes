@@ -6,7 +6,11 @@ export default class MultipleDailyNotes extends Plugin {
 	settings: PluginSettings;
 
 	async loadSettings() {
-		this.settings = Object.assign({}, defaultSettings, await this.loadData());
+		this.settings = Object.assign(
+			{},
+			defaultSettings,
+			await this.loadData()
+		);
 	}
 
 	async saveSettings() {
@@ -37,15 +41,16 @@ export default class MultipleDailyNotes extends Plugin {
 
 		this.addSettingTab(new SettingsTab(this.app, this));
 
-    for(const config of this.settings.settings) {
-      this.addRibbonIcon(
-        config.ribbonIcon || "calendar",
-        config.commandDescription || `Open Daily Note: ${config.templateFileLocation}`,
-        async () => {
-          await this.openDailyNote(config);
-        }
-      );
-    }
+		for (const config of this.settings.settings) {
+			this.addRibbonIcon(
+				config.ribbonIcon || "calendar",
+				config.commandDescription ||
+					`Open Daily Note: ${config.templateFileLocation}`,
+				async () => {
+					await this.openDailyNote(config);
+				}
+			);
+		}
 
 		this.addCommand({
 			id: "create-daily-notes",
@@ -60,16 +65,20 @@ export default class MultipleDailyNotes extends Plugin {
 
 	async openDailyNote(config: DailyNotesConfig) {
 		const dailyNoteFilePath = this.getNoteFilePathForConfig(config);
-		let dailyNoteFile = this.app.vault.getAbstractFileByPath(
-			dailyNoteFilePath
-		) as TFile;
-		if (!dailyNoteFile) {
+		let dailyNoteFile =
+			this.app.vault.getAbstractFileByPath(dailyNoteFilePath);
+		if (!dailyNoteFile || !(dailyNoteFile instanceof TFile)) {
 			await this.createDailyNote(config);
-      dailyNoteFile = this.app.vault.getAbstractFileByPath(
-        dailyNoteFilePath
-      ) as TFile;
+			dailyNoteFile = this.app.vault.getAbstractFileByPath(
+				dailyNoteFilePath
+			) as TFile;
 		}
-		this.app.workspace.getLeaf().openFile(dailyNoteFile);
+
+		if (dailyNoteFile instanceof TFile) {
+			this.app.workspace.getLeaf().openFile(dailyNoteFile);
+		} else {
+			new Notice("Unable to open daily note");
+		}
 	}
 
 	getNoteFilePathForConfig(config: DailyNotesConfig) {
@@ -84,8 +93,9 @@ export default class MultipleDailyNotes extends Plugin {
 	async createDailyNote(config: DailyNotesConfig) {
 		const templateFile = this.app.vault.getAbstractFileByPath(
 			config.templateFileLocation
-		) as TFile;
-		if (templateFile instanceof TFile) { // Will only run if the template file exists
+		);
+		if (templateFile instanceof TFile) {
+			// Will only run if the template file exists
 			try {
 				const templateFileContents = await this.app.vault.read(
 					templateFile
@@ -94,7 +104,7 @@ export default class MultipleDailyNotes extends Plugin {
 				const newFileContents = templateFileContents;
 				const newFile =
 					this.app.vault.getAbstractFileByPath(newFilePath);
-				if (!newFile) {
+				if (!newFile || !(newFile instanceof TFile)) {
 					await this.app.vault.create(newFilePath, newFileContents);
 					new Notice(
 						`Created new file: ${newFilePath} based off template: ${config.templateFileLocation}`
@@ -103,6 +113,11 @@ export default class MultipleDailyNotes extends Plugin {
 			} catch (err) {
 				new Notice(`Error creating new file: ${err}`);
 			}
+		} else {
+			// Handle case where template file doesn't exist or isn't a TFile
+			new Notice(
+				`Template file not found: ${config.templateFileLocation}`
+			);
 		}
 	}
 

@@ -71,7 +71,7 @@ export default class MultipleDailyNotes extends Plugin {
 			await this.createDailyNote(config);
 			dailyNoteFile = this.app.vault.getAbstractFileByPath(
 				dailyNoteFilePath
-			) as TFile;
+			);
 		}
 
 		if (dailyNoteFile instanceof TFile) {
@@ -83,11 +83,15 @@ export default class MultipleDailyNotes extends Plugin {
 
 	getNoteFilePathForConfig(config: DailyNotesConfig) {
 		const date = moment();
-		const hoursOffset = parseInt(config.timeOffset.split(":")[0]);
-		const minutesOffset = parseInt(config.timeOffset.split(":")[1]);
+		const timeOffset = config.timeOffset || "00:00";
+		const dateFormat = config.dateFormat || "YYYY-MM-DD";
+		const hoursOffset = parseInt(timeOffset.split(":")[0]);
+		const minutesOffset = parseInt(timeOffset.split(":")[1]);
 		date.subtract(hoursOffset, "hours").subtract(minutesOffset, "minutes");
-		const newFileName = date.format(config.dateFormat) + ".md";
-		return config.newFileFolder + newFileName;
+		const newFileName = date.format(dateFormat) + ".md";
+		const newFileFolder = config.newFileFolder.endsWith("/")
+			? config.newFileFolder : config.newFileFolder + "/";
+		return newFileFolder + newFileName;
 	}
 
 	async createDailyNote(config: DailyNotesConfig) {

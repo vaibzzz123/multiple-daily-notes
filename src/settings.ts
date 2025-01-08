@@ -1,6 +1,7 @@
 import {
 	AbstractInputSuggest,
 	App,
+	getIconIds,
 	PluginSettingTab,
 	Setting,
 	TFolder,
@@ -59,6 +60,40 @@ class FileFolderSuggestion extends AbstractInputSuggest<string> {
 			this.plugin.settings.settings[this.index].templateFileLocation =
 				value;
 		}
+		await this.plugin.saveSettings();
+		this.close();
+	}
+}
+
+class IconSuggestion extends AbstractInputSuggest<string> {
+	private plugin: MultipleDailyNotes;
+	private index: number;
+
+	constructor(
+		app: App,
+		inputEl: HTMLInputElement,
+		plugin: MultipleDailyNotes,
+		index: number
+	) {
+		super(app, inputEl);
+		this.plugin = plugin;
+		this.index = index;
+	}
+
+	getSuggestions(input: string): string[] {
+		const icons = getIconIds();
+		return icons.filter((icon) =>
+			icon.toLowerCase().includes(input.toLowerCase())
+		);
+	}
+
+	renderSuggestion(value: string, el: HTMLElement): void {
+		el.setText(value);
+	}
+
+	async selectSuggestion(value: string): Promise<void> {
+		this.setValue(value);
+		this.plugin.settings.settings[this.index].ribbonIcon = value;
 		await this.plugin.saveSettings();
 		this.close();
 	}
@@ -151,15 +186,13 @@ export default class SettingsTab extends PluginSettingTab {
 			new Setting(containerEl)
 				.setName("Ribbon Icon")
 				.setDesc("Icon to display in the ribbon")
-				.addText((text) =>
-					text
-						.setPlaceholder("Ribbon icon to use")
-						.setValue(setting.ribbonIcon ?? "")
-						.onChange(async (value) => {
-							this.plugin.settings.settings[i].ribbonIcon = value;
-							await this.plugin.saveSettings();
-						})
-				);
+				.addText((text) => {
+					const inputEl = text.inputEl;
+					new IconSuggestion(this.app, inputEl, this.plugin, i);
+					text.setPlaceholder("calendar").setValue(
+						setting.ribbonIcon ?? ""
+					);
+				});
 
 			// Command Description
 			new Setting(containerEl)

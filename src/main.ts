@@ -19,23 +19,7 @@ export default class MultipleDailyNotes extends Plugin {
 
 	// Called when the plugin is loaded
 	async onload() {
-		console.log("Loading MyPlugin");
-		// Example config, hard coded for now, will be configurable in settings UI later
-		// const configs: DailyNotesConfig[] = [
-		// 	{
-		// 		templateFileLocation: "fold1/Template1.md",
-		// 		newFileFolder: "fold1/",
-		// 		dateFormat: "YYYY-MM-DD",
-		// 		timeOffset: "00:00",
-		// 		commandDescription: "Open main journal daily note"
-		// 	},
-		// 	{
-		// 		templateFileLocation: "fold2/Template2.md",
-		// 		newFileFolder: "fold2/",
-		// 		dateFormat: "YYYY-MM-DD",
-		// 		timeOffset: "00:00",
-		// 	},
-		// ];
+		console.log("Loading MultipleDailyNotes");
 
 		await this.loadSettings();
 
@@ -127,6 +111,6 @@ export default class MultipleDailyNotes extends Plugin {
 
 	// Called when the plugin is unloaded (e.g., when disabled or removed)
 	onunload() {
-		console.log("Unloading MyPlugin");
+		console.log("Unloading MultipleDailyNotes");
 	}
 }

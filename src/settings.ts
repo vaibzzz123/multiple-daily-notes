@@ -10,7 +10,7 @@ import MultipleDailyNotes from "./main";
 class FileFolderSuggestion extends AbstractInputSuggest<string> {
 	private plugin: MultipleDailyNotes;
 	private index: number;
-	private suggesionType: "file" | "folder";
+	private suggestionType: "file" | "folder";
 
 	constructor(
 		app: App,
@@ -22,13 +22,13 @@ class FileFolderSuggestion extends AbstractInputSuggest<string> {
 		super(app, inputEl);
 		this.plugin = plugin;
 		this.index = index;
-		this.suggesionType = suggesionType;
+		this.suggestionType = suggesionType;
 	}
 
 	getSuggestions(input: string): string[] {
 		const files = this.app.vault.getFiles();
 
-		if (this.suggesionType === "folder") {
+		if (this.suggestionType === "folder") {
 			const filesAndFolders = this.app.vault.getAllLoadedFiles();
 			const folders = filesAndFolders.filter(
 				(item) => item instanceof TFolder
@@ -53,7 +53,7 @@ class FileFolderSuggestion extends AbstractInputSuggest<string> {
 
 	async selectSuggestion(value: string): Promise<void> {
 		this.setValue(value);
-		if (this.suggesionType === "folder") {
+		if (this.suggestionType === "folder") {
 			this.plugin.settings.settings[this.index].newFileFolder = value;
 		} else {
 			this.plugin.settings.settings[this.index].templateFileLocation =
@@ -74,13 +74,12 @@ export default class SettingsTab extends PluginSettingTab {
 	display(): void {
 		const { containerEl } = this;
 		containerEl.empty();
-		containerEl.createEl("h1", { text: "Configurations" });
 
 		for (let i = 0; i < this.plugin.settings.settings.length; i++) {
 			const setting = this.plugin.settings.settings[i];
 
 			// Configuration header
-			new Setting(containerEl).setName(`Config ${i + 1}`);
+			new Setting(containerEl).setName(`Config ${i + 1}`).setHeading();
 
 			// Template File Location
 			new Setting(containerEl)
@@ -188,9 +187,6 @@ export default class SettingsTab extends PluginSettingTab {
 						this.display();
 					});
 				});
-
-			// Add a visual separator
-			// containerEl.createEl("hr");
 		}
 
 		// Add New Configuration Button

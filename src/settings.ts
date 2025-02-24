@@ -5,6 +5,7 @@ import {
 	PluginSettingTab,
 	Setting,
 	TFolder,
+	setIcon,
 } from "obsidian";
 import MultipleDailyNotes from "./main";
 
@@ -88,7 +89,9 @@ class IconSuggestion extends AbstractInputSuggest<string> {
 	}
 
 	renderSuggestion(value: string, el: HTMLElement): void {
-		el.setText(value);
+		const span = el.createSpan();
+		setIcon(span, value);
+		el.createSpan({ text: " " + value });
 	}
 
 	async selectSuggestion(value: string): Promise<void> {
@@ -186,7 +189,7 @@ export default class SettingsTab extends PluginSettingTab {
 			new Setting(containerEl)
 				.setName("Ribbon Icon")
 				.setDesc("Icon to display in the ribbon")
-				.addText((text) => {
+				.addSearch((text) => {
 					const inputEl = text.inputEl;
 					new IconSuggestion(this.app, inputEl, this.plugin, i);
 					text.setPlaceholder("calendar").setValue(

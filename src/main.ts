@@ -29,7 +29,7 @@ export default class MultipleDailyNotes extends Plugin {
 			this.addRibbonIcon(
 				config.ribbonIcon || "calendar",
 				config.commandDescription ||
-					`Open Daily Note: ${config.templateFileLocation}`,
+					`Open daily note: ${config.templateFileLocation}`,
 				async () => {
 					await this.openDailyNote(config);
 				}
@@ -38,7 +38,7 @@ export default class MultipleDailyNotes extends Plugin {
 
 		this.addCommand({
 			id: "create-daily-notes",
-			name: "Create Daily Notes from config",
+			name: "Create daily notes from config",
 			callback: () => {
 				for (const config of this.settings.settings) {
 					this.createDailyNote(config);

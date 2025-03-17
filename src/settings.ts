@@ -121,7 +121,7 @@ export default class SettingsTab extends PluginSettingTab {
 
 			// Template File Location
 			new Setting(containerEl)
-				.setName("Template File Location")
+				.setName("Template file location")
 				.setDesc("Path to the template file")
 				.addText((text) => {
 					const inputEl = text.inputEl;
@@ -140,7 +140,7 @@ export default class SettingsTab extends PluginSettingTab {
 
 			// New File Folder
 			new Setting(containerEl)
-				.setName("New File Folder")
+				.setName("New file folder")
 				.setDesc("Folder where new files will be created")
 				.addText((text) => {
 					const inputEl = text.inputEl;
@@ -159,7 +159,7 @@ export default class SettingsTab extends PluginSettingTab {
 
 			// Date Format
 			new Setting(containerEl)
-				.setName("Date Format")
+				.setName("Date format")
 				.setDesc("Date format for new files")
 				.addText((text) =>
 					text
@@ -173,7 +173,7 @@ export default class SettingsTab extends PluginSettingTab {
 
 			// Time Offset
 			new Setting(containerEl)
-				.setName("Time Offset")
+				.setName("Time offset")
 				.setDesc("Time offset for the note")
 				.addText((text) =>
 					text
@@ -187,7 +187,7 @@ export default class SettingsTab extends PluginSettingTab {
 
 			// Ribbon Icon
 			new Setting(containerEl)
-				.setName("Ribbon Icon")
+				.setName("Ribbon icon")
 				.setDesc("Icon to display in the ribbon")
 				.addSearch((text) => {
 					const inputEl = text.inputEl;
@@ -199,7 +199,7 @@ export default class SettingsTab extends PluginSettingTab {
 
 			// Command Description
 			new Setting(containerEl)
-				.setName("Command Description")
+				.setName("Command description")
 				.setDesc("Description for the custom command")
 				.addText((text) =>
 					text
@@ -215,7 +215,7 @@ export default class SettingsTab extends PluginSettingTab {
 
 			// Delete Button
 			new Setting(containerEl)
-				.setName("Delete Configuration")
+				.setName("Delete configuration")
 				.addButton((button) => {
 					button.setButtonText("Delete").onClick(async () => {
 						this.plugin.settings.settings.splice(i, 1);
@@ -227,7 +227,7 @@ export default class SettingsTab extends PluginSettingTab {
 
 		// Add New Configuration Button
 		new Setting(containerEl)
-			.setName("Add New Configuration")
+			.setName("Add new configuration")
 			.addButton((button) => {
 				button.setButtonText("Add").onClick(async () => {
 					this.plugin.settings.settings.push({

@@ -1,4 +1,5 @@
 export interface DailyNotesConfig {
+  name?: string;
   templateFileLocation: string;
   newFileFolder: string;
   dateFormat: string;
@@ -14,6 +15,7 @@ export interface PluginSettings {
 export const defaultSettings: PluginSettings = {
   settings: [
   {
+    name: "daily",
     templateFileLocation: "",
     newFileFolder: "",
     dateFormat: "",

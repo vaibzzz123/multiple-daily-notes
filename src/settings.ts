@@ -117,7 +117,25 @@ export default class SettingsTab extends PluginSettingTab {
 			const setting = this.plugin.settings.settings[i];
 
 			// Configuration header
-			new Setting(containerEl).setName(`Config ${i + 1}`).setHeading();
+			new Setting(containerEl)
+				.setName(
+					setting.name ? `Config: ${setting.name}` : `Config ${i + 1}`
+				)
+				.setHeading();
+
+			// Configuration Name
+			new Setting(containerEl)
+				.setName("Config name")
+				.setDesc("Unique name used by CLI commands, for example work")
+				.addText((text) =>
+					text
+						.setPlaceholder(`Config ${i + 1}`)
+						.setValue(setting.name ?? "")
+						.onChange(async (value) => {
+							this.plugin.settings.settings[i].name = value.trim();
+							await this.plugin.saveSettings();
+						})
+				);
 
 			// Template File Location
 			new Setting(containerEl)
@@ -231,6 +249,7 @@ export default class SettingsTab extends PluginSettingTab {
 			.addButton((button) => {
 				button.setButtonText("Add").onClick(async () => {
 					this.plugin.settings.settings.push({
+						name: "",
 						templateFileLocation: "",
 						newFileFolder: "",
 						dateFormat: "",

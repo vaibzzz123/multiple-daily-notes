@@ -61,6 +61,23 @@ Quick starting guide for new plugin devs:
 
 - Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
 
+## Obsidian CLI
+
+Obsidian 1.12.2 or newer can access configured daily notes from scripts. Give each configuration a unique **Config name** in the plugin settings, then use:
+
+```shell
+# List configurations and their resolved paths as JSON
+obsidian multiple-daily-notes:configs
+
+# Print today's path for one configuration
+obsidian multiple-daily-notes:path config=work
+
+# Create today's note from its template if needed, then append content
+obsidian multiple-daily-notes:append config=work content="new line"
+```
+
+Use `inline` to omit the leading newline or `open` to open the note after appending. Unnamed configurations can be selected by their one-based position, such as `config=1`. The `path` and `append` commands return an error when the configured daily notes folder does not exist.
+
 ## Improve code quality with eslint (optional)
 - [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
 - To use eslint with this project, make sure to install eslint from terminal:

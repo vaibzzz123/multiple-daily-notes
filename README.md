@@ -6,7 +6,7 @@ Obsidian plugin for adding multiple daily notes, with some extra configurations 
 
 ## Obsidian CLI
 
-List your configs,
+List your configs:
 
 ```shell
 obsidian multiple-daily-notes:configs

@@ -19,6 +19,45 @@ export default class MultipleDailyNotes extends Plugin {
 			defaultSettings,
 			await this.loadData()
 		);
+
+		let settingsChanged = false;
+		const usedNames = new Set<string>();
+		for (let index = 0; index < this.settings.settings.length; index++) {
+			const config = this.settings.settings[index];
+			const legacyConfig = config as DailyNotesConfig & {
+				commandDescription?: string;
+			};
+
+			if (!config.ribbonIconTooltip && legacyConfig.commandDescription) {
+				config.ribbonIconTooltip = legacyConfig.commandDescription;
+				settingsChanged = true;
+			}
+			if ("commandDescription" in legacyConfig) {
+				delete legacyConfig.commandDescription;
+				settingsChanged = true;
+			}
+
+			let name = typeof config.name === "string" ? config.name.trim() : "";
+			if (!name || usedNames.has(name)) {
+				const baseName = `config-${index + 1}`;
+				name = baseName;
+				let suffix = 2;
+				while (usedNames.has(name)) {
+					name = `${baseName}-${suffix}`;
+					suffix++;
+				}
+				settingsChanged = true;
+			}
+			if (config.name !== name) {
+				config.name = name;
+				settingsChanged = true;
+			}
+			usedNames.add(name);
+		}
+
+		if (settingsChanged) {
+			await this.saveSettings();
+		}
 	}
 
 	async saveSettings() {
@@ -37,7 +76,7 @@ export default class MultipleDailyNotes extends Plugin {
 		for (const config of this.settings.settings) {
 			this.addRibbonIcon(
 				config.ribbonIcon || "calendar",
-				config.commandDescription ||
+				config.ribbonIconTooltip ||
 					`Open daily note: ${config.templateFileLocation}`,
 				async () => {
 					await this.openDailyNote(config);
@@ -63,9 +102,8 @@ export default class MultipleDailyNotes extends Plugin {
 			null,
 			() =>
 				JSON.stringify(
-					this.settings.settings.map((config, index) => ({
-						config: this.getConfigSelector(config, index),
-						name: config.name?.trim() || null,
+					this.settings.settings.map((config) => ({
+						config: config.name,
 						templateFileLocation: config.templateFileLocation,
 						newFileFolder: config.newFileFolder,
 						dateFormat: config.dateFormat || "YYYY-MM-DD",
@@ -80,7 +118,7 @@ export default class MultipleDailyNotes extends Plugin {
 		const configFlag = {
 			config: {
 				value: "<name>",
-				description: "Config name or one-based config number",
+				description: "Config name",
 				required: true,
 			},
 		};
@@ -134,10 +172,6 @@ export default class MultipleDailyNotes extends Plugin {
 		);
 	}
 
-	getConfigSelector(config: DailyNotesConfig, index: number) {
-		return config.name?.trim() || String(index + 1);
-	}
-
 	getConfigFromCli(params: CliData) {
 		const selector = params.config;
 		if (!selector || selector === "true") {
@@ -145,7 +179,7 @@ export default class MultipleDailyNotes extends Plugin {
 		}
 
 		const namedMatches = this.settings.settings.filter(
-			(config) => config.name?.trim() === selector
+			(config) => config.name === selector
 		);
 		if (namedMatches.length > 1) {
 			throw new Error(`Config name is not unique: ${selector}`);
@@ -154,14 +188,26 @@ export default class MultipleDailyNotes extends Plugin {
 			return namedMatches[0];
 		}
 
-		if (/^[1-9]\d*$/.test(selector)) {
-			const config = this.settings.settings[Number(selector) - 1];
-			if (config) {
-				return config;
-			}
-		}
-
 		throw new Error(`Config not found: ${selector}`);
+	}
+
+	isConfigNameAvailable(name: string, currentIndex?: number) {
+		return (
+			name.length > 0 &&
+			!this.settings.settings.some(
+				(config, index) => index !== currentIndex && config.name === name
+			)
+		);
+	}
+
+	getAvailableConfigName() {
+		let suffix = this.settings.settings.length + 1;
+		let name = `config-${suffix}`;
+		while (!this.isConfigNameAvailable(name)) {
+			suffix++;
+			name = `config-${suffix}`;
+		}
+		return name;
 	}
 
 	requireConfiguredFolder(config: DailyNotesConfig) {

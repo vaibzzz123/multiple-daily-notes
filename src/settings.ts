@@ -118,24 +118,32 @@ export default class SettingsTab extends PluginSettingTab {
 
 			// Configuration header
 			new Setting(containerEl)
-				.setName(
-					setting.name ? `Config: ${setting.name}` : `Config ${i + 1}`
-				)
+				.setName(`Config: ${setting.name}`)
 				.setHeading();
 
 			// Configuration Name
 			new Setting(containerEl)
 				.setName("Config name")
 				.setDesc("Unique name used by CLI commands, for example work")
-				.addText((text) =>
-					text
-						.setPlaceholder(`Config ${i + 1}`)
-						.setValue(setting.name ?? "")
+				.addText((text) => {
+					text.inputEl.required = true;
+					return text
+						.setPlaceholder("work")
+						.setValue(setting.name)
 						.onChange(async (value) => {
-							this.plugin.settings.settings[i].name = value.trim();
-							await this.plugin.saveSettings();
-						})
-				);
+							const name = value.trim();
+							const error = !name
+								? "Config name is required"
+								: this.plugin.isConfigNameAvailable(name, i)
+								? ""
+								: "Config name must be unique";
+							text.inputEl.setCustomValidity(error);
+							if (!error) {
+								this.plugin.settings.settings[i].name = name;
+								await this.plugin.saveSettings();
+							}
+						});
+				});
 
 			// Template File Location
 			new Setting(containerEl)
@@ -215,18 +223,18 @@ export default class SettingsTab extends PluginSettingTab {
 					);
 				});
 
-			// Command Description
+			// Ribbon Icon Tooltip
 			new Setting(containerEl)
-				.setName("Command description")
-				.setDesc("Description for the custom command")
+				.setName("Ribbon icon tooltip")
+				.setDesc("Text shown when hovering over the ribbon icon")
 				.addText((text) =>
 					text
-						.setPlaceholder("Custom command description")
-						.setValue(setting.commandDescription ?? "")
+						.setPlaceholder("Open work daily note")
+						.setValue(setting.ribbonIconTooltip ?? "")
 						.onChange(async (value) => {
 							this.plugin.settings.settings[
 								i
-							].commandDescription = value;
+							].ribbonIconTooltip = value;
 							await this.plugin.saveSettings();
 						})
 				);
@@ -249,13 +257,13 @@ export default class SettingsTab extends PluginSettingTab {
 			.addButton((button) => {
 				button.setButtonText("Add").onClick(async () => {
 					this.plugin.settings.settings.push({
-						name: "",
+						name: this.plugin.getAvailableConfigName(),
 						templateFileLocation: "",
 						newFileFolder: "",
 						dateFormat: "",
 						timeOffset: "",
 						ribbonIcon: "",
-						commandDescription: "",
+						ribbonIconTooltip: "",
 					});
 					await this.plugin.saveSettings();
 					this.display();

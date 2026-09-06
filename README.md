@@ -4,6 +4,18 @@ Obsidian plugin for adding multiple daily notes, with some extra configurations 
 
 ![image](https://github.com/user-attachments/assets/6d7197e4-43bb-4350-a43f-9276999b6bc8)
 
+## Obsidian CLI
+
+Obsidian 1.12.2 or newer can access configured daily notes from scripts. Give each configuration a unique **Config name** in the plugin settings, then use:
+
+```shell
+obsidian multiple-daily-notes:configs
+obsidian multiple-daily-notes:path config=work
+obsidian multiple-daily-notes:append config=work content="new line"
+```
+
+Use `inline` to omit the leading newline or `open` to open the note after appending. The `path` and `append` commands return an error when the configured daily notes folder does not exist.
+
 <!-- This is a sample plugin for Obsidian (https://obsidian.md).
 
 This project uses TypeScript to provide type checking and documentation.
@@ -60,23 +72,6 @@ Quick starting guide for new plugin devs:
 ## Manually installing the plugin
 
 - Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
-
-## Obsidian CLI
-
-Obsidian 1.12.2 or newer can access configured daily notes from scripts. Give each configuration a unique **Config name** in the plugin settings, then use:
-
-```shell
-# List configurations and their resolved paths as JSON
-obsidian multiple-daily-notes:configs
-
-# Print today's path for one configuration
-obsidian multiple-daily-notes:path config=work
-
-# Create today's note from its template if needed, then append content
-obsidian multiple-daily-notes:append config=work content="new line"
-```
-
-Use `inline` to omit the leading newline or `open` to open the note after appending. Unnamed configurations can be selected by their one-based position, such as `config=1`. The `path` and `append` commands return an error when the configured daily notes folder does not exist.
 
 ## Improve code quality with eslint (optional)
 - [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 

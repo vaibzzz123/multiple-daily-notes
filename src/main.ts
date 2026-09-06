@@ -135,6 +135,17 @@ export default class MultipleDailyNotes extends Plugin {
 		);
 
 		this.registerCliHandler(
+			"multiple-daily-notes:read",
+			"Read today's note for a configuration, creating it if needed",
+			configFlag,
+			async (params) => {
+				const config = this.getConfigFromCli(params);
+				const dailyNote = await this.getOrCreateDailyNote(config);
+				return this.app.vault.cachedRead(dailyNote.file);
+			}
+		);
+
+		this.registerCliHandler(
 			"multiple-daily-notes:append",
 			"Create today's configured note if needed, then append content",
 			{

@@ -11,6 +11,7 @@ Inspired by `obsidian daily:path`, `daily:read`, and `daily:append`.
 ```shell
 obsidian multiple-daily-notes:configs
 obsidian multiple-daily-notes:path config=work
+obsidian multiple-daily-notes:read config=work
 obsidian multiple-daily-notes:append config=work content="new line"
 ```
 

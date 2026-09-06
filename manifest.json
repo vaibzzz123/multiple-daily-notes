@@ -1,8 +1,8 @@
 {
 	"id": "multiple-daily-notes",
 	"name": "Multiple Daily Notes",
-	"version": "1.0.2",
-	"minAppVersion": "0.15.0",
+	"version": "1.1.0",
+	"minAppVersion": "1.12.2",
 	"description": "Create multiple daily notes in one vault, with additional configuration options including time offsets for creating notes past midnight, choosing the ribbon icon to use for the note, and more.",
 	"author": "Vab Kapoor",
 	"authorUrl": "https://vabkapoor.com",

@@ -6,10 +6,15 @@ Obsidian plugin for adding multiple daily notes, with some extra configurations 
 
 ## Obsidian CLI
 
-Inspired by `obsidian daily:path`, `daily:read`, and `daily:append`. 
+List your configs,
 
 ```shell
 obsidian multiple-daily-notes:configs
+```
+
+Then, read/write to various daily notes folders, similarly to `obsidian daily:path`, `daily:read`, and `daily:append`.
+
+```shell
 obsidian multiple-daily-notes:path config=work
 obsidian multiple-daily-notes:read config=work
 obsidian multiple-daily-notes:append config=work content="new line"

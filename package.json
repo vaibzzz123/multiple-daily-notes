@@ -3,6 +3,7 @@
 	"version": "1.0.0",
 	"description": "Plugin for Obsidian that lets you create multiple daily notes in one vault",
 	"main": "main.js",
+	"packageManager": "pnpm@10.34.5",
 	"scripts": {
 		"dev": "node esbuild.config.mjs",
 		"build": "tsc -noEmit -skipLibCheck && node esbuild.config.mjs production",
